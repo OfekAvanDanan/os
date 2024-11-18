@@ -70,9 +70,26 @@ board=(
 # display start
 displayStart "$input_file"
 
-moves=0
 
-displayBoard "$board" 
+# Extract moves from the PGN file
+moves=$(awk '/^1\./ {flag=1} flag' "$input_file")
+
+if [ -z "$moves" ]; then
+  echo "No moves found in the PGN file." >&2
+  exit 1
+fi
 
 
+# Run parse_moves.py with the extracted moves
+output=$(python3 ./parse_moves.py "$moves")
+
+if [ $? -ne 0 ]; then
+  echo "Error occurred while running parse_moves.py" >&2
+  exit 1
+fi
+
+echo "$output"
+
+# Display the initial board
+displayBoard "$board"
 
