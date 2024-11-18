@@ -2,6 +2,24 @@
 
 # Ofek Avan Danan | avandao | 211824727
 
+# Global Varibles
+#======================
+moves_array=[]
+moves_length=0
+currMove=0
+
+# create an empty board
+board=(
+  "r n b q k b n r"  
+  "p p p p p p p p"  
+  ". . . . . . . ." 
+  ". . . . . . . ."  
+  ". . . . . . . ."  
+  ". . . . . . . ."  
+  "P P P P P P P P" 
+  "R N B Q K B N R" 
+)
+
 # FUNCTIONS - 
 #======================
 # fileExistence - Checks if the input file exists
@@ -23,19 +41,23 @@ argumentValidation() {
 
 displayStart(){
     local file="$1"
+    awk '!/^1\./ {print; next} {exit}' "$file"
+}
 
-    # Read the first 11 lines of the file and display them
-    head -n 11 "$file"
+getMoves(){
+    local file="$1"
+    moves=$(awk '/^1\./ {flag=1} flag' "$file")
+
+    # Run parse_moves.py with the extracted moves
+    moves_array=($(python3 parse_moves.py "$moves")) # the () turns it into an arrey
+    moves_length=${#moves_array[@]}
 }
 
 displayMoves(){
-    local c=$1
-    local e=
-    echo "Move 2/114"
+    echo "Move $currMove/$moves_length"
 }
 
 displayBoard(){
-    local b=$1
     echo "  a b c d e f g h"
     for ((i=0; i<8; i++)); do
     echo "$((8-i)) ${board[i]} $((8-i))"
@@ -55,41 +77,14 @@ fi
 input_file="$1"
 fileExistence "$input_file"
 
-# create an empty board
-board=(
-  "r n b q k b n r"  
-  "p p p p p p p p"  
-  ". . . . . . . ." 
-  ". . . . . . . ."  
-  ". . . . . . . ."  
-  ". . . . . . . ."  
-  "P P P P P P P P" 
-  "R N B Q K B N R" 
-)
 
 # display start
 displayStart "$input_file"
 
-
 # Extract moves from the PGN file
-moves=$(awk '/^1\./ {flag=1} flag' "$input_file")
-
-if [ -z "$moves" ]; then
-  echo "No moves found in the PGN file." >&2
-  exit 1
-fi
-
-
-# Run parse_moves.py with the extracted moves
-output=$(python3 ./parse_moves.py "$moves")
-
-if [ $? -ne 0 ]; then
-  echo "Error occurred while running parse_moves.py" >&2
-  exit 1
-fi
-
-echo "$output"
-
+getMoves "$input_file"
+echo "$moves_array"
+displayMoves
 # Display the initial board
-displayBoard "$board"
+displayBoard
 
