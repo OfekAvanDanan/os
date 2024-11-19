@@ -144,6 +144,7 @@ displayBoard() {
 
 # Main script flow
 #======================
+
 # Validate the number of arguments
 if [ "$#" -ne 1 ]; then
     argumentValidation
@@ -162,5 +163,42 @@ getMoves "$input_file"
 # Generate all board states
 getAllMoves
 
-# Display the board after the first move
-displayBoard 17
+# Interactive navigation of board states
+ans=""
+while true; do
+    # Display the current board state
+    displayBoard $currMove
+    echo -n "Press 'd' to move forward, 'a' to move back, 'w' to go to the start, 's' to go to the end, 'q' to quit: "
+    read -n 1 ans
+    echo #Skip line
+
+    case $ans in
+    "d")
+        # 'd' to move forward
+        if [ $currMove -lt $moves_length ]; then
+            ((currMove++))
+        else
+            echo "No more moves available."
+        fi
+        ;;
+    "a")
+        if [ $currMove -gt 0 ]; then
+            ((currMove--))
+        fi
+        ;;
+    "w")
+        currMove=0 
+        ;;
+    "s")
+        currMove=$moves_length  # Jump to the end
+        ;;
+    "q")
+        echo "Exiting"
+        break
+        ;;
+    *)
+        echo "Invalid input. Please try again." # TODO
+        ;;
+    esac
+done
+echo "End of game."
