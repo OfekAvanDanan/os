@@ -2,8 +2,7 @@
 
 # Ofek Avan Danan | avandao | 211824727
 
-
-# FUNCTIONS - 
+# FUNCTIONS -
 #======================
 
 # argumentValidation - Ensures that exactly 2 arguments are provided to the script
@@ -41,13 +40,16 @@ splitPGNFile(){
     local gameNum=1
     local currGameContent=""
 
+    # Extract base name of the input file without extension
+    local baseName=$(basename "$file" .pgn)
+
     # Read the input file line by line
     while IFS= read -r line || [ -n "$line" ]; do
         # Check for the start of a new game by looking for "[Event " at the beginning of the line
         if [[ "$(echo "$line" | head -c 7)" == "[Event " ]]; then
             # If a new game starts, save the previous game's content (if it exists)
             if [ -n "$currGameContent" ]; then
-                createAPGNFile "$dir" "$gameNum" "$currGameContent"
+                createAPGNFile "$dir" "$baseName" "$gameNum" "$currGameContent"
                 gameNum=$((gameNum + 1))
             fi
             # Start a new game's content
@@ -60,7 +62,7 @@ splitPGNFile(){
 
     # Save the last game's content (if it exists)
     if [ -n "$currGameContent" ]; then
-        createAPGNFile "$dir" "$gameNum" "$currGameContent"
+        createAPGNFile "$dir" "$baseName" "$gameNum" "$currGameContent"
     fi
 
     echo "All games have been split and saved to '$dir'."
@@ -69,11 +71,12 @@ splitPGNFile(){
 # createAPGNFile - Creates a PGN file for the current game
 createAPGNFile(){
     local dir="$1"
-    local gameNum="$2"
-    local gameContent="$3"
+    local baseName="$2"
+    local gameNum="$3"
+    local gameContent="$4"
     local currGameFile
 
-    currGameFile="$dir/game${gameNum}.pgn"
+    currGameFile="$dir/${baseName}_${gameNum}.pgn"
     echo "$gameContent" > "$currGameFile"
     echo "Saved game $gameNum to '$currGameFile'."
 }
