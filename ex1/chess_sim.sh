@@ -20,8 +20,7 @@ emptyBoard=(
   "R N B Q K B N R"
 )
 
-boardHistorty=()
-
+boardHistory=()  # Corrected variable name
 
 # FUNCTIONS - 
 #======================
@@ -81,30 +80,13 @@ getMoves() {
     moves_length=${#moves_array[@]}
 }
 
-getAllMoves() {
-    local file="$1"
-    local line
-    local moves=""
-
-    # Read the file line by line and collect moves
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^1\. ]]; then
-            moves+="$line "
-        elif [[ -n "$moves" ]]; then
-            moves+="$line "
-        fi
-    done < "$file"
-
-    # Run parse_moves.py with the extracted moves
-    moves_array=($(python3 parse_moves.py "$moves"))
-    moves_length=${#moves_array[@]}
-}
-
 # Generate all board states
 getAllMoves() {
-    # Add the initial board to the history
+    # Initialize the board
     board=("${emptyBoard[@]}")
-    boardHistory+=("$(printf "%s\n" "${board[@]}")")
+
+    # Add the initial board to the history
+    boardHistory+=("${board[@]}")
 
     for ((i=0; i<moves_length; i++)); do
         m="${moves_array[i]}"
@@ -129,11 +111,9 @@ getAllMoves() {
         board[y2]="${lineArray2[*]}"
 
         # Append the updated board to the history
-        boardHistory+=("$(printf "%s\n" "${board[@]}")")
+        boardHistory+=("${board[@]}")
     done
-    
 }
-
 
 update_cell() {
     local row=$1
@@ -148,13 +128,12 @@ update_cell() {
     }')
 }
 
-
 displayBoard() {
     local stage="$1"
     echo "Move $stage/$moves_length"
 
     # Extract the board state for the given stage
-    local board_state=("${boardHistorty[@]:$((stage * 8)):8}") # Extract 8 lines per stage
+    local board_state=("${boardHistory[@]:$((stage * 8)):8}") # Extract 8 lines per stage
 
     echo "  a b c d e f g h"
     for ((i=0; i<8; i++)); do
@@ -162,8 +141,6 @@ displayBoard() {
     done
     echo "  a b c d e f g h"
 }
-
-
 
 # Main script flow
 #======================
@@ -181,7 +158,9 @@ displayStart "$input_file"
 
 # Extract moves from the PGN file
 getMoves "$input_file"
+
+# Generate all board states
 getAllMoves
 
-# Display the initial board
-displayBoard 0
+# Display the board after the first move
+displayBoard 17
