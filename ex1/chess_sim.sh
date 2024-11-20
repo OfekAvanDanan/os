@@ -45,6 +45,8 @@ displayStart() {
     local line
     local found_moves=0
 
+    echo "Metadata from PGN file:"
+
     # Read the file line by line
     while IFS= read -r line; do
         if [[ "$line" =~ ^1\. ]]; then
@@ -100,6 +102,52 @@ getAllMoves() {
         # Move the piece
         piece=$(echo "${board[y1]}" | cut -d' ' -f$((x1 + 1)))
 
+        # Special Moves
+        # Castling
+        if [[ "$piece" = "K" && "$x1" -eq 4 && "$y1" -eq 7 ]]; then
+            if [[ "$x2" -eq 2 ]]; then
+                read -a lineArray <<< "${board[7]}"
+                lineArray[0]='.'
+                lineArray[3]='R'
+                board[7]="${lineArray[*]}"
+            elif [[ "$x2" -eq 6 ]]; then
+                read -a lineArray <<< "${board[7]}"
+                lineArray[7]='.'
+                lineArray[5]='R'
+                board[7]="${lineArray[*]}"
+            fi
+        elif [[ "$piece" = "k" && "$x1" -eq 4 && "$y1" -eq 0 ]]; then
+            if [[ "$x2" -eq 2 ]]; then
+                read -a lineArray <<< "${board[0]}"
+                lineArray[0]='.'
+                lineArray[3]='r'
+                board[0]="${lineArray[*]}"
+            elif [[ "$x2" -eq 6 ]]; then
+                read -a lineArray <<< "${board[0]}"
+                lineArray[7]='.'
+                lineArray[5]='r'
+                board[0]="${lineArray[*]}"
+            fi
+        fi
+
+        # Promotion
+        if [[ "$piece" = "P" && "$y2" -eq 0 ]]; then
+            lineArray2[$x2]='Q'
+        elif [[ "$piece" = "p" && "$y2" -eq 7 ]]; then
+            lineArray2[$x2]='q'
+        fi
+
+        # En Passant
+        if [[ "$piece" = "P" && "$y1" -eq 3 && "$y2" -eq 2 && "${board[3]}" =~ "p" && "$x2" -ne "$x1" ]]; then
+            read -a lineArray <<< "${board[3]}"
+            lineArray[$x2]='.'
+            board[3]="${lineArray[*]}"
+        elif [[ "$piece" = "p" && "$y1" -eq 4 && "$y2" -eq 5 && "${board[4]}" =~ "P" && "$x2" -ne "$x1" ]]; then
+            read -a lineArray <<< "${board[4]}"
+            lineArray[$x2]='.'
+            board[4]="${lineArray[*]}"
+        fi
+
         # Update the source position
         read -a lineArray1 <<< "${board[y1]}"
         lineArray1[$x1]='.'
@@ -114,6 +162,7 @@ getAllMoves() {
         boardHistory+=("${board[@]}")
     done
 }
+
 
 update_cell() {
     local row=$1
@@ -165,11 +214,13 @@ getAllMoves
 
 # Interactive navigation of board states
 ans=""
+displayBoard $currMove
+
+
 while true; do
     # Display the current board state
-    displayBoard $currMove
-    echo -n "Press 'd' to move forward, 'a' to move back, 'w' to go to the start, 's' to go to the end, 'q' to quit: "
-    read -n 1 ans
+    echo -n "Press 'd' to move forward, 'a' to move back, 'w' to go to the start, 's' to go to the end, 'q' to quit:"
+    read -r ans
     echo #Skip line
 
     case $ans in
@@ -177,6 +228,7 @@ while true; do
         # 'd' to move forward
         if [ $currMove -lt $moves_length ]; then
             ((currMove++))
+            displayBoard $currMove
         else
             echo "No more moves available."
         fi
@@ -185,19 +237,22 @@ while true; do
         if [ $currMove -gt 0 ]; then
             ((currMove--))
         fi
+        displayBoard $currMove
         ;;
     "w")
         currMove=0 
+        displayBoard $currMove
         ;;
     "s")
         currMove=$moves_length  # Jump to the end
+        displayBoard $currMove
         ;;
     "q")
-        echo "Exiting"
+        echo "Exiting."
         break
         ;;
     *)
-        echo "Invalid input. Please try again." # TODO
+        echo "Invalid key pressed: $ans" 
         ;;
     esac
 done
