@@ -17,9 +17,16 @@ void printHistory() {
   }
 }
 
-void Execute(char *input) {
+void exitShell() {
+  printf("exit\n");
+  exit(0);
+}
+
+void execute(char *input) {
   if (strcmp(input, "history") == 0) {
     printHistory();
+  } else if (strcmp(input, "exit") == 0) {
+    exitShell();
   }
 }
 
@@ -30,8 +37,10 @@ int main() {
   while (1) {
     printf("$ ");
 
+    // Clean buffer
     fflush(stdout);
     if (fgets(input, sizeof(input), stdin) == NULL) {
+      perror("fgets failed");
       continue;
     }
 
@@ -43,7 +52,7 @@ int main() {
       history[historyCounter++] = strdup(input);
     }
 
-    Execute(input);
+    execute(input);
   }
 
   return 0;
