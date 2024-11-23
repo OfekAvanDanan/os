@@ -64,6 +64,7 @@ void execute(char *input) {
   args[argc] = NULL;
 
   // Execute the command
+  // ====================
   if (argc == 0) {
     // No command entered, just return
     return;
@@ -75,7 +76,7 @@ void execute(char *input) {
     exitShell();
   } else if (strcmp(args[0], "cd") == 0) {
     if (argc < 2) {
-      fprintf(stderr, "cd: missing argument\n");
+      printf("cd: missing argument\n");
     } else {
       changeDirectory(args[1]);
     }
