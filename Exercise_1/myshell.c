@@ -1,9 +1,13 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 // Global variables
-char *history[1000];
+char *history[100];
 int historyCounter = 0;
 
 // Print history
@@ -26,10 +30,8 @@ int main() {
   while (1) {
     printf("$ ");
 
-    // לבדוק אם מותר
     fflush(stdout);
     if (fgets(input, sizeof(input), stdin) == NULL) {
-      perror("fgets failed");
       continue;
     }
 
