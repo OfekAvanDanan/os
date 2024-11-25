@@ -10,6 +10,13 @@
 char *history[100];
 int historyCounter = 0;
 
+// Memory Cleanup
+void freeHistory() {
+  for (int i = 0; i < historyCounter; i++) {
+    free(history[i]);
+  }
+}
+
 // Print history
 void printHistory() {
   for (int i = 0; i < historyCounter; i++) {
@@ -18,20 +25,45 @@ void printHistory() {
 }
 
 void exitShell() {
-  printf("exit\n");
-  exit(0);
+  freeHistory();
+  exit(EXIT_SUCCESS);
 }
 
 void changeDirectory(char *path) {
   if (chdir(path) != 0) {
-    perror("cd failed");
+    perror("chdir failed"); // chdir failed
   }
 }
 
-void execute(char *input) {
-  // Split the input into args
-  char *args[100];
-  int argc = 0; // Counter for arguments
+void pwd() {
+  char cwd[2048];
+  if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    printf("%s\n", cwd);
+  } else {
+    perror("getcwd failed"); // getcwd failed
+  }
+}
+
+void forker(char *args[]) {
+  pid_t pid = fork();
+  if (pid < 0) {
+    perror("fork failed"); // fork failed
+    exit(EXIT_FAILURE);
+  } else if (pid == 0) {
+    if (execvp(args[0], args) == -1) {
+      perror("exec failed"); // exec failed
+      exit(EXIT_FAILURE);
+    }
+    exit(EXIT_SUCCESS);
+  } else {
+    int status;
+    if (waitpid(pid, &status, 0) == -1) {
+      perror("waitpid failed"); // waitpid failed
+    }
+  }
+}
+
+void argsSpliter(char *input, char *args[], int *argc) {
   char *currChar = input;
 
   while (*currChar != '\0') {
@@ -46,7 +78,7 @@ void execute(char *input) {
     }
 
     // Save the start of the argument
-    args[argc++] = currChar;
+    args[(*argc)++] = currChar;
 
     // Move to the end of the current argument
     while (*currChar != '\0' && *currChar != ' ') {
@@ -61,10 +93,16 @@ void execute(char *input) {
   }
 
   // Null-terminate the args array for execvp
-  args[argc] = NULL;
+  args[*argc] = NULL;
+}
 
-  // Execute the command
-  // ====================
+void execute(char *input) {
+  char *args[100];
+  int argc = 0;
+
+  // Split the input into arguments
+  argsSpliter(input, args, &argc);
+
   if (argc == 0) {
     // No command entered, just return
     return;
@@ -76,15 +114,19 @@ void execute(char *input) {
     exitShell();
   } else if (strcmp(args[0], "cd") == 0) {
     if (argc < 2) {
-      printf("cd: missing argument\n");
+      printf("chdir failed: Bad address\n"); // chdir failed
     } else {
       changeDirectory(args[1]);
     }
+  } else if (strcmp(args[0], "pwd") == 0) {
+    pwd();
+  } else {
+    forker(args);
   }
 }
 
 // Main Loop
-int main() {
+int main(int argc, char *argv[]) {
   char input[100];
 
   while (1) {
@@ -93,7 +135,7 @@ int main() {
     // Clean buffer
     fflush(stdout);
     if (fgets(input, sizeof(input), stdin) == NULL) {
-      perror("fgets failed");
+      perror("fgets failed"); // fgets failed
       continue;
     }
 
