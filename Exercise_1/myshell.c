@@ -23,7 +23,7 @@ void freeHistory() {
 // Print history
 void printHistory() {
   for (int i = 0; i < historyCounter; i++) {
-    printf("%d %s\n", i + 1, history[i]);
+    printf("%s\n", history[i]);
   }
 }
 
@@ -33,6 +33,11 @@ void exitShell() {
 }
 
 void changeDirectory(char *path) {
+  if (path == NULL) {
+    printf("chdir failed: Bad address\n");
+    return;
+  }
+
   if (chdir(path) != 0) {
     perror("chdir failed"); // chdir failed
   }
@@ -40,6 +45,7 @@ void changeDirectory(char *path) {
 
 void pwd() {
   char cwd[2048];
+
   if (getcwd(cwd, sizeof(cwd)) != NULL) {
     printf("%s\n", cwd);
   } else {
@@ -128,7 +134,7 @@ void execute(char *input) {
     exitShell();
   } else if (strcmp(args[0], "cd") == 0) {
     if (argc < 2) {
-      printf("chdir failed: Bad address\n"); // chdir failed
+      changeDirectory(NULL); // If no argument is provided, change to HOME
     } else {
       changeDirectory(args[1]);
     }

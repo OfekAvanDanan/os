@@ -1,0 +1,14 @@
+pwd
+ls
+cd /tmp
+pwd
+ls
+cd non_existent_directory
+history
+custom_script.sh
+cd
+ls -l
+pwd
+unknown_command
+history
+exit
