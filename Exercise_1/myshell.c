@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +10,8 @@
 // Global variables
 char *history[100];
 int historyCounter = 0;
+char *customPaths[100];
+int customPathCount = 0;
 
 // Memory Cleanup
 void freeHistory() {
@@ -50,12 +53,23 @@ void forker(char *args[]) {
     perror("fork failed"); // fork failed
     exit(EXIT_FAILURE);
   } else if (pid == 0) {
+    // Child process
     if (execvp(args[0], args) == -1) {
+      // If not found in PATH, try custom paths
+      for (int i = 0; i < customPathCount; i++) {
+        char fullPath[2048];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", customPaths[i], args[0]);
+        if (access(fullPath, X_OK) == 0) {
+          execv(fullPath, args); // Execute the script from custom path if found and executable
+          perror("exec failed"); // If execv fails
+          exit(EXIT_FAILURE);
+        }
+      }
       perror("exec failed"); // exec failed
       exit(EXIT_FAILURE);
     }
-    exit(EXIT_SUCCESS);
   } else {
+    // Parent process
     int status;
     if (waitpid(pid, &status, 0) == -1) {
       perror("waitpid failed"); // waitpid failed
@@ -128,6 +142,11 @@ void execute(char *input) {
 // Main Loop
 int main(int argc, char *argv[]) {
   char input[100];
+
+  // Store custom paths passed as arguments
+  for (int i = 1; i < argc; i++) {
+    customPaths[customPathCount++] = argv[i];
+  }
 
   while (1) {
     printf("$ ");
