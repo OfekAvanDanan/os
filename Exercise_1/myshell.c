@@ -34,8 +34,12 @@ void exitShell() {
 
 void changeDirectory(char *path) {
   if (path == NULL) {
-    printf("chdir failed: Bad address\n");
-    return;
+    // If no path is provided, change to HOME directory
+    path = getenv("HOME");
+    if (path == NULL) {
+      fprintf(stderr, "cd failed: HOME environment variable not set\n");
+      return;
+    }
   }
 
   if (chdir(path) != 0) {
@@ -62,16 +66,20 @@ void forker(char *args[]) {
     // Child process
     if (execvp(args[0], args) == -1) {
       // If not found in PATH, try custom paths
+      int found = 0;
       for (int i = 0; i < customPathCount; i++) {
         char fullPath[2048];
         snprintf(fullPath, sizeof(fullPath), "%s/%s", customPaths[i], args[0]);
         if (access(fullPath, X_OK) == 0) {
+          found = 1;
           execv(fullPath, args); // Execute the script from custom path if found and executable
           perror("exec failed"); // If execv fails
           exit(EXIT_FAILURE);
         }
       }
-      perror("exec failed"); // exec failed
+      if (!found) {
+        perror("exec failed"); // Print standard exec error message
+      }
       exit(EXIT_FAILURE);
     }
   } else {
@@ -134,7 +142,8 @@ void execute(char *input) {
     exitShell();
   } else if (strcmp(args[0], "cd") == 0) {
     if (argc < 2) {
-      changeDirectory(NULL); // If no argument is provided, change to HOME
+      fprintf(stderr, "chdir failed: Bad address\n"); // Print error if no argument provided
+      return;
     } else {
       changeDirectory(args[1]);
     }

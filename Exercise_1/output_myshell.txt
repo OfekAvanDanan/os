@@ -1,59 +1,94 @@
 $ /home/ofek/os/Exercise_1
-$ CompareShellOutputs.sh
-Makefile
-chess_sim.py
-chess_sim.sh
-myshell
-myshell.c
-output_myshell.txt
-output_reference.txt
-parse_moves.py
-part3.out
-shell_output_diff.txt
-shell_test_commands.txt
-split_pgn.sh
-tester
+$ $ /
+$ $ /
 $ $ /tmp
 $ custom_folder
 pyright-226059-ckoR1vLQeQ4N
+pyright-659346-JUlNJIvoG5Sv
+pyright-659346-Q6ga7zSnLJFU
 python-languageserver-cancellation
 snap-private-tmp
 systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-logind.service-T2JczJ
 systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-resolved.service-xaNtV6
+test_dir
+test_directory
 vscode-typescript1000
 {F1868E4A-BBB1-4FAA-962A-856B54871102}
+$ mkdir: cannot create directory ‘test_dir’: File exists
+$ mkdir: cannot create directory ‘test_dir’: File exists
+$ $ /tmp/test_dir
+$ $ file1.txt
+file2.txt
+$ $ pwd
+cd /
+pwd
+cd ..
+pwd
+cd /tmp
+pwd
+ls
+mkdir test_dir
+mkdir test_dir
+cd test_dir
+pwd
+touch file1.txt file2.txt
+ls
+cat file1.txt
+history
 $ chdir failed: No such file or directory
+$ ls: cannot access 'non_existent_file.txt': No such file or directory
+$ $ file2.txt
 $ pwd
-ls
+cd /
+pwd
+cd ..
+pwd
 cd /tmp
 pwd
 ls
-cd non_existent_directory
+mkdir test_dir
+mkdir test_dir
+cd test_dir
+pwd
+touch file1.txt file2.txt
+ls
+cat file1.txt
 history
-$ Custom command executed!
-$ chdir failed: Bad address
-$ total 32
-drwxr-xr-x 2 ofek ofek 4096 Nov 25 17:29 custom_folder
-drwx------ 2 ofek ofek 4096 Nov 23 11:39 pyright-226059-ckoR1vLQeQ4N
-drwxr-xr-x 2 ofek ofek 4096 Nov 23 12:35 python-languageserver-cancellation
-drwx------ 2 root root 4096 Nov 22 16:08 snap-private-tmp
-drwx------ 3 root root 4096 Nov 22 16:08 systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-logind.service-T2JczJ
-drwx------ 3 root root 4096 Nov 22 16:08 systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-resolved.service-xaNtV6
-drwxr-xr-x 2 ofek ofek 4096 Nov 23 12:35 vscode-typescript1000
-drwxr-xr-x 2 ofek ofek 4096 Nov 23 12:35 {F1868E4A-BBB1-4FAA-962A-856B54871102}
-$ /tmp
+cd ../non_existent_directory
+ls non_existent_file.txt
+rm file1.txt
+ls
+history
 $ exec failed: No such file or directory
+$ /tmp/test_dir
+$ rmdir: failed to remove 'test_dir': No such file or directory
+$ chdir failed: Bad address
+$ /tmp/test_dir
 $ pwd
-ls
+cd /
+pwd
+cd ..
+pwd
 cd /tmp
 pwd
 ls
-cd non_existent_directory
-history
-custom_script.sh
-cd
-ls -l
+mkdir test_dir
+mkdir test_dir
+cd test_dir
 pwd
+touch file1.txt file2.txt
+ls
+cat file1.txt
+history
+cd ../non_existent_directory
+ls non_existent_file.txt
+rm file1.txt
+ls
+history
 unknown_command
+pwd
+rmdir test_dir
+cd
+pwd
 history
 $ 
