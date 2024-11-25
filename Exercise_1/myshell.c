@@ -1,3 +1,5 @@
+// Ofek Avan Danan | avandao | 211824727
+
 #include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
@@ -92,32 +94,11 @@ void forker(char *args[]) {
 }
 
 void argsSpliter(char *input, char *args[], int *argc) {
-  char *currChar = input;
+  char *token = strtok(input, " ");
 
-  while (*currChar != '\0') {
-    // Skip spaces
-    while (*currChar == ' ') {
-      currChar++;
-    }
-
-    // Check if we reached the end of the string
-    if (*currChar == '\0') {
-      break;
-    }
-
-    // Save the start of the argument
-    args[(*argc)++] = currChar;
-
-    // Move to the end of the current argument
-    while (*currChar != '\0' && *currChar != ' ') {
-      currChar++;
-    }
-
-    // If we found a space, terminate the argument and move on
-    if (*currChar == ' ') {
-      *currChar = '\0';
-      currChar++;
-    }
+  while (token != NULL) {
+    args[(*argc)++] = token;
+    token = strtok(NULL, " ");
   }
 
   // Null-terminate the args array for execvp

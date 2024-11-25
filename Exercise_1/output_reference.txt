@@ -2,23 +2,18 @@ $ /home/ofek/os/Exercise_1
 $ $ /
 $ $ /
 $ $ /tmp
-$ custom_folder
-pyright-226059-ckoR1vLQeQ4N
-pyright-659346-JUlNJIvoG5Sv
-pyright-659346-Q6ga7zSnLJFU
-python-languageserver-cancellation
-snap-private-tmp
-systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-logind.service-T2JczJ
-systemd-private-01499a29e77f413bb87d3bb3aa92f9a4-systemd-resolved.service-xaNtV6
+$ snap-private-tmp
+systemd-private-72933fb7cafb47dd8fc9d98e746fefc9-systemd-logind.service-oNYWXL
+systemd-private-72933fb7cafb47dd8fc9d98e746fefc9-systemd-resolved.service-k9qzVR
 test_dir
-test_directory
-vscode-typescript1000
-{F1868E4A-BBB1-4FAA-962A-856B54871102}
+{EA95CFBD-6783-4DAB-9992-54DF2A0055D7}
 $ mkdir: cannot create directory ‘test_dir’: File exists
 $ mkdir: cannot create directory ‘test_dir’: File exists
 $ $ /tmp/test_dir
-$ $ file1.txt
+$ $ another_test_dir
+file1.txt
 file2.txt
+test_dir
 $ $ pwd
 cd /
 pwd
@@ -37,7 +32,9 @@ cat file1.txt
 history
 $ chdir failed: No such file or directory
 $ ls: cannot access 'non_existent_file.txt': No such file or directory
-$ $ file2.txt
+$ $ another_test_dir
+file2.txt
+test_dir
 $ pwd
 cd /
 pwd
@@ -61,7 +58,7 @@ ls
 history
 $ exec failed: No such file or directory
 $ /tmp/test_dir
-$ rmdir: failed to remove 'test_dir': No such file or directory
+$ rmdir: failed to remove 'test_dir': Directory not empty
 $ chdir failed: Bad address
 $ /tmp/test_dir
 $ pwd
@@ -91,4 +88,94 @@ rmdir test_dir
 cd
 pwd
 history
+$ mkdir: cannot create directory ‘another_test_dir’: File exists
+$ $ $ another_file.txt
+$ $ $ rmdir: failed to remove 'another_test_dir': Directory not empty
+$ pwd
+cd /
+pwd
+cd ..
+pwd
+cd /tmp
+pwd
+ls
+mkdir test_dir
+mkdir test_dir
+cd test_dir
+pwd
+touch file1.txt file2.txt
+ls
+cat file1.txt
+history
+cd ../non_existent_directory
+ls non_existent_file.txt
+rm file1.txt
+ls
+history
+unknown_command
+pwd
+rmdir test_dir
+cd
+pwd
+history
+mkdir another_test_dir
+cd another_test_dir
+touch another_file.txt
+ls
+cat another_file.txt
+cd ..
+rmdir another_test_dir
+history
+$ mkdir: cannot create directory ‘test_dir’: File exists
+$ $ $ test1.txt
+test2.txt
+$ $ $ test1.txt
+$ $ rmdir: failed to remove 'test_dir': Directory not empty
+$ pwd
+cd /
+pwd
+cd ..
+pwd
+cd /tmp
+pwd
+ls
+mkdir test_dir
+mkdir test_dir
+cd test_dir
+pwd
+touch file1.txt file2.txt
+ls
+cat file1.txt
+history
+cd ../non_existent_directory
+ls non_existent_file.txt
+rm file1.txt
+ls
+history
+unknown_command
+pwd
+rmdir test_dir
+cd
+pwd
+history
+mkdir another_test_dir
+cd another_test_dir
+touch another_file.txt
+ls
+cat another_file.txt
+cd ..
+rmdir another_test_dir
+history
+mkdir test_dir
+cd test_dir
+touch test1.txt test2.txt
+ls
+cat test1.txt
+rm test2.txt
+ls
+cd ..
+rmdir test_dir
+history
+$ chdir failed: No such file or directory
+$ /tmp/test_dir
 $ 

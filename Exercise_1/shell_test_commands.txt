@@ -25,4 +25,24 @@ rmdir test_dir
 cd
 pwd
 history
+mkdir another_test_dir
+cd another_test_dir
+touch another_file.txt
+ls
+cat another_file.txt
+cd ..
+rmdir another_test_dir
+history
+mkdir test_dir
+cd test_dir
+touch test1.txt test2.txt
+ls
+cat test1.txt
+rm test2.txt
+ls
+cd ..
+rmdir test_dir
+history
+cd non_existent_directory
+pwd
 exit
