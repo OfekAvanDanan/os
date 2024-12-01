@@ -163,7 +163,7 @@ getAllMoves() {
     done
 }
 
-
+# Update each cell for cleaner syntax
 update_cell() {
     local row=$1
     local col=$2
@@ -177,6 +177,7 @@ update_cell() {
     }')
 }
 
+# Display Board
 displayBoard() {
     local stage="$1"
     echo "Move $stage/$moves_length"

@@ -3,10 +3,9 @@ $ $ /
 $ $ /
 $ $ /tmp
 $ snap-private-tmp
-systemd-private-72933fb7cafb47dd8fc9d98e746fefc9-systemd-logind.service-oNYWXL
-systemd-private-72933fb7cafb47dd8fc9d98e746fefc9-systemd-resolved.service-k9qzVR
+systemd-private-cca8c9c21b514c43819545599f35333a-systemd-logind.service-Mvgkjz
+systemd-private-cca8c9c21b514c43819545599f35333a-systemd-resolved.service-QnUac6
 test_dir
-{EA95CFBD-6783-4DAB-9992-54DF2A0055D7}
 $ mkdir: cannot create directory ‘test_dir’: File exists
 $ mkdir: cannot create directory ‘test_dir’: File exists
 $ $ /tmp/test_dir
