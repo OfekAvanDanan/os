@@ -1,5 +1,3 @@
-
-
 #include <fcntl.h>
 #include <sched.h>
 #include <stdio.h>
@@ -33,46 +31,51 @@ void writeToEndOfFile(const char *message, int loop) {
 
 int main(int argc, char *argv[]) {
   if (argc != 5) {
-    fprintf(stderr, "Usage: %s <parent_message> <child1_message> <child2_message> <count>", argv[0]);
+    fprintf(stderr, "Usage: %s <parent_message> <child1_message> <child2_message> <count>\n", argv[0]);
     return 1;
   }
-  int newfd;
+
   // Create a file initially
-  if ((newfd = open("output.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644)) < 0) {
-    perror(argv[1]); /* open failed */
-    exit(1);
+  int newfd = open("output.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644);
+  if (newfd < 0) {
+    perror("Error creating file");
+    exit(EXIT_FAILURE);
   }
+  close(newfd); // Close the file descriptor after creation
 
   // Store command-line arguments
   int loop = atoi(argv[4]);
 
-  // Fork from the children
-  pid_t pid = fork();
-  if (pid < 0) {
-    perror("fork failed"); // fork failed
+  // Fork the first child process
+  pid_t pid1 = fork();
+  if (pid1 < 0) {
+    perror("fork failed for child1");
     exit(EXIT_FAILURE);
-  } else if (pid == 0) {
+  } else if (pid1 == 0) {
+    // First child process writes to the file
     writeToEndOfFile(argv[2], loop);
-
-    pid_t pid2 = fork();
-    if (pid2 < 0) {
-      perror("fork failed"); // fork failed
-      exit(EXIT_FAILURE);
-    } else if (pid2 == 0) {
-      writeToEndOfFile(argv[3], loop);
-      exit(EXIT_SUCCESS);
-    } else {
-      int status;
-      waitpid(pid, &status, 0); // Wait for the child process to finish
-      exit(EXIT_SUCCESS);
-    }
-
-  } else {
-    int status;
-    waitpid(pid, &status, 0); // Wait for the child process to finish
-    writeToEndOfFile(argv[1], loop);
+    exit(EXIT_SUCCESS);
   }
 
+  // Fork the second child process
+  pid_t pid2 = fork();
+  if (pid2 < 0) {
+    perror("fork failed for child2");
+    exit(EXIT_FAILURE);
+  } else if (pid2 == 0) {
+    // Second child process writes to the file
+    writeToEndOfFile(argv[3], loop);
+    exit(EXIT_SUCCESS);
+  }
+
+  // Parent process waits for both child processes to complete
+  int status;
+  waitpid(pid1, &status, 0);
+  waitpid(pid2, &status, 0);
+
+  // Parent process writes to the file
+  writeToEndOfFile(argv[1], loop);
+
   printf("File 'output.txt' has been created and written successfully.\n");
-  return 0; // Exit the program successfully
+  return 0;
 }
