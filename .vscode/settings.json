@@ -5,5 +5,8 @@
         "myshell",
         "Wextra",
         "מותר"
-    ]
+    ],
+    "files.associations": {
+        "stdio.h": "c"
+    }
 }
