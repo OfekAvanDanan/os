@@ -39,10 +39,18 @@ int main(int argc, char *argv[]) {
 
   const char *lockfile = "lockfile.lock";
 
-  // Open output file
-  FILE *file = fopen("output.txt", "w");
-  if (!file) {
+  // Open output file using open
+  int fd = open("output.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644);
+  if (fd < 0) {
     perror("Error opening output.txt");
+    return EXIT_FAILURE;
+  }
+
+  // Convert fd to FILE * using fdopen
+  FILE *file = fdopen(fd, "w");
+  if (!file) {
+    perror("Error creating FILE * from fd");
+    close(fd);
     return EXIT_FAILURE;
   }
 
@@ -57,7 +65,7 @@ int main(int argc, char *argv[]) {
     } else if (pid == 0) {
       // Child process writes safely to the file
       writeSafely(lockfile, file, argv[i], loop);
-      fclose(file); // Close the file in the child process
+      fclose(file); // Close FILE * in the child process
       exit(EXIT_SUCCESS);
     }
   }
@@ -67,7 +75,7 @@ int main(int argc, char *argv[]) {
     wait(NULL);
   }
 
-  // Close the file in the parent process
+  // Close the FILE * in the parent process
   fclose(file);
 
   // Print completion message to the console
