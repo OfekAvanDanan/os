@@ -1,3 +1,0 @@
-Child1 pam
-Child1 pam
-Child1 pam
