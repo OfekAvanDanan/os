@@ -1,4 +1,4 @@
-#include <C:\Users\Azrie\CLionProjects\os2.3\buffered_open.h>
+#include <buffered_open.h>
 #include <stdlib.h>
 #include<stdio.h>
 #include <string.h>
