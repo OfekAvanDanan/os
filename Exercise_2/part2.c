@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
   const char *lockfile = "lockfile.lock";
 
   // Open output file using open
-  int fd = open("output.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644);
+  int fd = open("output2.txt", O_CREAT | O_TRUNC | O_WRONLY, 0644);
   if (fd < 0) {
-    perror("Error opening output.txt");
+    perror("Error opening output2.txt");
     return EXIT_FAILURE;
   }
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
   fclose(file);
 
   // Print completion message to the console
-  printf("All processes have completed writing.\n");
+  // printf("All processes have completed writing.\n");
 
   return EXIT_SUCCESS;
 }
