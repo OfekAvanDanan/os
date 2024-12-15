@@ -29,11 +29,11 @@ buffered_file_t *buffered_open(const char *pathname, int flags, ...) {
     //close the program properly
     if (atexit(atexit_care) != 0) {
         perror("Failed to register atexit");
-        return 1;
+        return NULL;
     }
     if (signal(SIGINT,sigint_care) == SIG_ERR) {
         perror("failed to register signal care");
-        return 1;
+        return NULL;
     }
 
     return bf;
