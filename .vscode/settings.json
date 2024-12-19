@@ -2,6 +2,7 @@
     "cSpell.words": [
         "APGN",
         "avandao",
+        "Azriel",
         "myshell",
         "Wextra",
         "מותר"
@@ -10,6 +11,7 @@
         "stdio.h": "c",
         "fcntl.h": "c",
         "stdlib.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "stat.h": "c"
     }
 }
