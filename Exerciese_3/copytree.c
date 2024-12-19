@@ -1,4 +1,5 @@
 #include <asm-generic/fcntl.h>
+#include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,4 +109,39 @@ void create_directory(const char *path) {
   }
 }
 
-void copy_directory(const char *src, const char *dest, int copy_symlinks, int copy_permissions) {}
+void copy_directory(const char *src, const char *dest, int copy_symlinks, int copy_permissions) {
+  struct DIR *srcDir;
+  // Check the source directory
+  if ((srcDir = opendir(src)) == NULL) {
+    perror("COMMAND failed");
+  }
+
+  // Create destination directory
+  create_directory(dest);
+
+  struct dirent *entry;
+  while ((entry = readdir(srcDir)) != NULL) {
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+      continue;
+    }
+
+    char src_path[PATH_MAX];
+    char dest_path[PATH_MAX];
+
+    struct stat stat_buf;
+    if (lstat(src_path, &stat_buf) == -1) {
+      perror("lstat failed");
+      continue;
+    }
+
+    if (S_ISDIR(stat_buf.st_mode)) {
+      // Recursively copy subdirectory
+      copy_directory(src_path, dest_path, copy_symlinks, copy_permissions);
+    } else {
+      // Copy file
+      copy_file(src_path, dest_path, copy_symlinks, copy_permissions);
+    }
+  }
+
+  closedir(srcDir);
+}
