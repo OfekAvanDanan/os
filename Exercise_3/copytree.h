@@ -7,7 +7,6 @@ extern "C" {
 #endif
 
 void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_permissions);
-void create_directory(const char *src);
 void copy_directory(const char *src, const char *dest, int copy_symlinks, int copy_permissions);
 
 #ifdef __cplusplus
