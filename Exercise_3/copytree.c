@@ -1,6 +1,6 @@
-#include <asm-generic/fcntl.h>
 #include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,29 +52,29 @@ void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_pe
     return;
   }
 
-  int src_fd = open(srcTarget, O_RDONLY);
-  if (src_fd == -1) {
+  int srcFd = open(srcTarget, O_RDONLY);
+  if (srcFd == -1) {
     perror("COMMAND failed");
     exit(EXIT_FAILURE);
   }
 
   create_directories(dest);
 
-  int dest_fd = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-  if (dest_fd == -1) {
+  int destFd = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  if (destFd == -1) {
     perror("COMMAND failed");
-    close(src_fd);
+    close(srcFd);
     exit(EXIT_FAILURE);
   }
 
   char buffer[BUFFER_SIZE];
   ssize_t bytes_read, bytes_written;
-  while ((bytes_read = read(src_fd, buffer, BUFFER_SIZE)) > 0) {
-    bytes_written = write(dest_fd, buffer, bytes_read);
+  while ((bytes_read = read(srcFd, buffer, BUFFER_SIZE)) > 0) {
+    bytes_written = write(destFd, buffer, bytes_read);
     if (bytes_written != bytes_read) {
       perror("COMMAND failed");
-      close(src_fd);
-      close(dest_fd);
+      close(srcFd);
+      close(destFd);
       exit(EXIT_FAILURE);
     }
   }
@@ -82,14 +82,14 @@ void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_pe
   if (copy_permissions) {
     if (chmod(dest, fileStat.st_mode) == -1) {
       perror("COMMAND failed");
-      close(src_fd);
-      close(dest_fd);
+      close(srcFd);
+      close(destFd);
       exit(EXIT_FAILURE);
     }
   }
 
-  close(src_fd);
-  close(dest_fd);
+  close(srcFd);
+  close(destFd);
 }
 
 void copy_directory(const char *src, const char *dest, int copy_symlinks, int copy_permissions) {
@@ -107,21 +107,21 @@ void copy_directory(const char *src, const char *dest, int copy_symlinks, int co
       continue;
     }
 
-    char src_path[PATH_MAX];
-    char dest_path[PATH_MAX];
-    snprintf(src_path, sizeof(src_path), "%s/%s", src, entry->d_name);
-    snprintf(dest_path, sizeof(dest_path), "%s/%s", dest, entry->d_name);
+    char srcPath[PATH_MAX];
+    char destPath[PATH_MAX];
+    snprintf(srcPath, sizeof(srcPath), "%s/%s", src, entry->d_name);
+    snprintf(destPath, sizeof(destPath), "%s/%s", dest, entry->d_name);
 
     struct stat stat_buf;
-    if (lstat(src_path, &stat_buf) == -1) {
+    if (lstat(srcPath, &stat_buf) == -1) {
       perror("lstat failed");
       continue;
     }
 
     if (S_ISDIR(stat_buf.st_mode)) {
-      copy_directory(src_path, dest_path, copy_symlinks, copy_permissions);
+      copy_directory(srcPath, destPath, copy_symlinks, copy_permissions);
     } else {
-      copy_file(src_path, dest_path, copy_symlinks, copy_permissions);
+      copy_file(srcPath, destPath, copy_symlinks, copy_permissions);
     }
   }
 
