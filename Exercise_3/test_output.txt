@@ -1,0 +1,9 @@
+TEST_1, PASSED
+TEST_2, PASSED
+TEST_3, PASSED
+TEST_4, FAILED
+  - Permissions for directory dir2 do not match.
+TEST_5, PASSED
+TEST_6, FAILED
+  - Permissions for directory dir3/dir4 do not match.
+TEST_7, PASSED
