@@ -8,45 +8,6 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 1024
-
-void create_directories(const char *path, mode_t mode, int copy_permissions) {
-  char current_path[PATH_MAX] = {0};
-  const char *p = path;
-  char *q = current_path;
-
-  while (*p) {
-    *q++ = *p; // Copy character from path to current_path
-    if (*p == '/') {
-      *q = '\0'; // Null-terminate the current path
-      if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
-        perror("COMMAND failed");
-        exit(EXIT_FAILURE);
-      }
-
-      if (copy_permissions) {
-        if (chmod(current_path, mode) == -1) {
-          perror("COMMAND failed");
-          exit(EXIT_FAILURE);
-        }
-      }
-    }
-    p++;
-  }
-
-  *q = '\0'; // Null-terminate for the final directory
-  if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
-    perror("COMMAND failed");
-    exit(EXIT_FAILURE);
-  }
-
-  if (copy_permissions) {
-    if (chmod(current_path, mode) == -1) {
-      perror("COMMAND failed");
-      exit(EXIT_FAILURE);
-    }
-  }
-}
-
 void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_permissions) {
   struct stat fileStat;
 
@@ -126,8 +87,14 @@ void copy_directory(const char *src, const char *dest, int copy_symlinks, int co
     exit(EXIT_FAILURE);
   }
 
-  // Create the target directory
+  // Create the target directory with default permissions
   if (mkdir(dest, 0755) == -1 && errno != EEXIST) {
+    perror("COMMAND failed");
+    exit(EXIT_FAILURE);
+  }
+
+  // Add the following block to set permissions if required
+  if (copy_permissions && chmod(dest, statBuf.st_mode & 0777) == -1) {
     perror("COMMAND failed");
     exit(EXIT_FAILURE);
   }
