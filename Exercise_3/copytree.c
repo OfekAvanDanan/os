@@ -10,13 +10,12 @@
 #define BUFFER_SIZE 1024
 
 void create_directories(const char *path, mode_t mode, int copy_permissions) {
-  // Buffer to hold the current path
   char current_path[PATH_MAX] = {0};
   const char *p = path;
-  char *q = current_path; // Pointer to iterate through current_path
+  char *q = current_path;
 
   while (*p) {
-    *q++ = *p; // Copy the current character from path to current_path
+    *q++ = *p; // Copy character from path to current_path
     if (*p == '/') {
       *q = '\0'; // Null-terminate the current path
       if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
@@ -24,7 +23,6 @@ void create_directories(const char *path, mode_t mode, int copy_permissions) {
         exit(EXIT_FAILURE);
       }
 
-      // If copy_permissions is set, apply the permissions to the created directory
       if (copy_permissions) {
         if (chmod(current_path, mode) == -1) {
           perror("COMMAND failed");
@@ -35,7 +33,7 @@ void create_directories(const char *path, mode_t mode, int copy_permissions) {
     p++;
   }
 
-  // Handle the final directory
+  *q = '\0'; // Null-terminate for the final directory
   if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
     perror("COMMAND failed");
     exit(EXIT_FAILURE);
