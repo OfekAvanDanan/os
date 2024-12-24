@@ -1,1 +1,1 @@
-source_directory/file1.txt
+Content of file1

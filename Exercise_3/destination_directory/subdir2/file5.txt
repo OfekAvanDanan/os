@@ -1,1 +1,1 @@
-source_directory/subdir2/file5.txt
+Content of file5
