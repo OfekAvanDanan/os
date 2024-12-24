@@ -38,29 +38,26 @@ def run_test_case(test_case):
     subprocess.run(command, check=True)
 
 def verify_test_result(test_case):
+    failure_details = []
     for item in test_case['items']:
         dest_item_path = os.path.join(test_case['destination_directory'], item['name'])
         if item['type'] == 'file':
             if not os.path.isfile(dest_item_path):
-                return False
-            if (os.stat(dest_item_path).st_mode & 0o777) != (item['permissions'] & 0o777) and test_case['copy_permissions']:
-                return False
+                failure_details.append(f"File {item['name']} was not copied correctly.")
+            elif (os.stat(dest_item_path).st_mode & 0o777) != (item['permissions'] & 0o777) and test_case['copy_permissions']:
+                failure_details.append(f"Permissions for file {item['name']} do not match.")
         elif item['type'] == 'directory':
             if not os.path.isdir(dest_item_path):
-                return False
-            if (os.stat(dest_item_path).st_mode & 0o777) != (item['permissions'] & 0o777) and test_case['copy_permissions']:
-                return False
+                failure_details.append(f"Directory {item['name']} was not copied correctly.")
+            elif (os.stat(dest_item_path).st_mode & 0o777) != (item['permissions'] & 0o777) and test_case['copy_permissions']:
+                failure_details.append(f"Permissions for directory {item['name']} do not match.")
         elif item['type'] == 'symlink':
             if test_case['copy_symlinks']:
                 if not os.path.islink(dest_item_path):
-                    return False
-                if os.readlink(dest_item_path) != item['target']:
-                    return False
-            # else:
-            #     if os.path.exists(dest_item_path):
-            #         return False
-    return True
-
+                    failure_details.append(f"Symlink {item['name']} was not copied as a link.")
+                elif os.readlink(dest_item_path) != item['target']:
+                    failure_details.append(f"Symlink target for {item['name']} does not match. Expected: {item['target']}, Found: {os.readlink(dest_item_path)}.")
+    return failure_details
 
 def run_tests():
     signal.signal(signal.SIGALRM, timeout_handler)
@@ -79,13 +76,29 @@ def run_tests():
             if os.path.exists(test_case['destination_directory']):
                 shutil.rmtree(test_case['destination_directory'])
 
-            run_test_case(test_case)
-            result = {
-                "test_name": test_case['description'],
-                "test_number": i,
-                "status": "PASSED" if verify_test_result(test_case) else "FAILED"
-            }
-            results.append(result)
+            try:
+                run_test_case(test_case)
+                failure_details = verify_test_result(test_case)
+                if failure_details:
+                    results.append({
+                        "test_name": test_case['description'],
+                        "test_number": i,
+                        "status": "FAILED",
+                        "details": failure_details
+                    })
+                else:
+                    results.append({
+                        "test_name": test_case['description'],
+                        "test_number": i,
+                        "status": "PASSED"
+                    })
+            except Exception as e:
+                results.append({
+                    "test_name": test_case['description'],
+                    "test_number": i,
+                    "status": "FAILED",
+                    "details": [str(e)]
+                })
 
         signal.alarm(0)  # Disable the alarm
 
@@ -93,6 +106,9 @@ def run_tests():
         with open('test_output.txt', 'w') as f:
             for result in results:
                 f.write(f"TEST_{result['test_number']}, {result['status']}\n")
+                if "details" in result:
+                    for detail in result["details"]:
+                        f.write(f"  - {detail}\n")
 
         return json.dumps(results, indent=4)
 
@@ -103,18 +119,23 @@ def run_tests():
             results.append({
                 "test_name": test_case['description'],
                 "test_number": i,
-                "status": "FAILED"
+                "status": "FAILED",
+                "details": ["Timeout reached."]
             })
 
         # Write results to test_output.txt
         with open('test_output.txt', 'w') as f:
             for result in results:
                 f.write(f"TEST_{result['test_number']}, {result['status']}\n")
+                if "details" in result:
+                    for detail in result["details"]:
+                        f.write(f"  - {detail}\n")
 
         return json.dumps(results, indent=4)
 
 def main():
-    run_tests()
+    output = run_tests()
+    print(output)
 
 if __name__ == "__main__":
     main()

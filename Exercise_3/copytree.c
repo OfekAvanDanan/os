@@ -9,20 +9,44 @@
 
 #define BUFFER_SIZE 1024
 
-void create_directories(const char *path) {
-  char tmp[PATH_MAX];
-  snprintf(tmp, sizeof(tmp), "%s", path);
-  char *p = tmp;
+void create_directories(const char *path, mode_t mode, int copy_permissions) {
+  // Buffer to hold the current path
+  char current_path[PATH_MAX] = {0};
+  const char *p = path;
+  char *q = current_path; // Pointer to iterate through current_path
 
   while (*p) {
+    *q++ = *p; // Copy the current character from path to current_path
     if (*p == '/') {
-      *p = '\0';
-      mkdir(tmp, 0755);
-      *p = '/';
+      *q = '\0'; // Null-terminate the current path
+      if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
+        perror("COMMAND failed");
+        exit(EXIT_FAILURE);
+      }
+
+      // If copy_permissions is set, apply the permissions to the created directory
+      if (copy_permissions) {
+        if (chmod(current_path, mode) == -1) {
+          perror("COMMAND failed");
+          exit(EXIT_FAILURE);
+        }
+      }
     }
     p++;
   }
-  mkdir(tmp, 0755);
+
+  // Handle the final directory
+  if (mkdir(current_path, 0755) == -1 && errno != EEXIST) {
+    perror("COMMAND failed");
+    exit(EXIT_FAILURE);
+  }
+
+  if (copy_permissions) {
+    if (chmod(current_path, mode) == -1) {
+      perror("COMMAND failed");
+      exit(EXIT_FAILURE);
+    }
+  }
 }
 
 void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_permissions) {
@@ -81,6 +105,13 @@ void copy_file(const char *src, const char *dest, int copy_symlinks, int copy_pe
 
     if (bytesRead == -1) {
       perror("COMMAND failed");
+    }
+
+    if (copy_permissions && chmod(dest, fileStat.st_mode) == -1) {
+      perror("COMMAND failed");
+      close(srcFd);
+      close(destFd);
+      exit(EXIT_FAILURE);
     }
 
     close(srcFd);
