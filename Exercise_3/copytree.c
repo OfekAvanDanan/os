@@ -83,7 +83,7 @@ void copy_directory(const char *src, const char *dest, int copy_symlinks, int co
 
   // Check if the source is a directory
   if (stat(src, &statBuf) == -1 || !S_ISDIR(statBuf.st_mode)) {
-    fprintf(stderr, "Source is not a directory: %s\n", src);
+    perror("COMMAND failed");
     exit(EXIT_FAILURE);
   }
 
