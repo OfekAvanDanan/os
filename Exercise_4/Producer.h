@@ -55,7 +55,7 @@ public:
         break;
       }
 
-      std::string output = "Producer " + item + " " + std::to_string(counter);
+      std::string output = "Producer " + std::to_string(id) + " " + item + " " + std::to_string(counter);
       queue->insert(output); // Insert the item into the queue
     }
     queue->insert("DONE"); // Signal the end of production
