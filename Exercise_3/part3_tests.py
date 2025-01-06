@@ -11,7 +11,7 @@ def timeout_handler(signum, frame):
     raise TimeoutException
 
 def compile_c_files():
-    subprocess.run(["sudo", "gcc", "main.c", "copytree.c", "-o", "copytree"], check=True)
+    subprocess.run(["sudo", "gcc", "part3.c", "copytree.c", "-o", "copytree"], check=True)
 
 def setup_test_environment(test_case):
     os.makedirs(test_case['source_directory'], exist_ok=True)
