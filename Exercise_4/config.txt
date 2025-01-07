@@ -1,6 +1,6 @@
 PRODUCER 1
 20
-queue size = 20
+queue size = 5
 
 PRODUCER 2
 20
