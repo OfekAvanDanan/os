@@ -1,37 +1,73 @@
+#include "Config.h"
+#include "ConfigParser.h"
 #include "Producer.h"
 #include <iostream>
 #include <thread>
+#include <vector>
 
 // Function to consume items from a producer's queue
-void consumeItems(Producer *producer, const std::string &producerName) {
+void consumeItems(Producer *producer, const std::string &consumerName) {
   auto *queue = producer->getQueue();
   while (true) {
     std::string item = queue->remove();
     if (item == "DONE") {
       break;
     }
-    std::cout << producerName << " consumed: " << item << std::endl;
+    std::cout << consumerName << " consumed: " << item << std::endl;
   }
 }
 
-int main() {
-  // Create two producers
-  Producer producer1(1, 10, 5); // ID 1, 10 items, queue size 5
-  Producer producer2(2, 15, 5); // ID 2, 15 items, queue size 5
+int main(int argc, char *argv[]) {
+  // Check for configuration file argument
+  if (argc != 2) {
+    std::cerr << "Usage: " << argv[0] << " <config_file_path>" << std::endl;
+    return 1;
+  }
 
-  // Start producing items in parallel
-  std::thread producerThread1(&Producer::produceItems, &producer1);
-  std::thread producerThread2(&Producer::produceItems, &producer2);
+  std::string configFilePath = argv[1];
+  Config config;
 
-  // Consume items in parallel
-  std::thread consumerThread1(consumeItems, &producer1, "Consumer 1");
-  std::thread consumerThread2(consumeItems, &producer2, "Consumer 2");
+  // Parse the configuration file
+  if (!parseConfigFile(configFilePath, config)) {
+    std::cerr << "Error: Failed to parse the configuration file." << std::endl;
+    return 1;
+  }
 
-  // Wait for all threads to finish
-  producerThread1.join();
-  producerThread2.join();
-  consumerThread1.join();
-  consumerThread2.join();
+  // Create producers based on the configuration
+  std::vector<Producer *> producers;
+  std::vector<std::thread> producerThreads;
+  std::vector<std::thread> consumerThreads;
+
+  for (const auto &pConfig : config.producers) {
+    Producer *producer = new Producer(pConfig.id, pConfig.numberOfProducts, pConfig.queueSize);
+    producers.push_back(producer);
+
+    // Start the producer thread
+    producerThreads.emplace_back(&Producer::produceItems, producer);
+
+    // Start the consumer thread
+    std::string consumerName = "Consumer " + std::to_string(pConfig.id);
+    consumerThreads.emplace_back(consumeItems, producer, consumerName);
+  }
+
+  // Wait for all producer threads to finish
+  for (auto &t : producerThreads) {
+    if (t.joinable()) {
+      t.join();
+    }
+  }
+
+  // Wait for all consumer threads to finish
+  for (auto &t : consumerThreads) {
+    if (t.joinable()) {
+      t.join();
+    }
+  }
+
+  // Clean up producers
+  for (auto &producer : producers) {
+    delete producer;
+  }
 
   std::cout << "All producers and consumers have finished." << std::endl;
   return 0;

@@ -6,8 +6,10 @@ CXXFLAGS = -std=c++20 -Wall -Wextra -pthread
 TARGET = ex4.out
 
 # Source files
-SRCS = main.cpp
-HEADERS = Producer.h BoundedQueue.h
+SRCS = main.cpp ConfigParser.cpp
+
+# Header files
+HEADERS = Config.h ConfigParser.h Producer.h BoundedQueue.h Dispatcher.h CoEditor.h ScreenManager.h
 
 # Object files (derived from source files)
 OBJS = $(SRCS:.cpp=.o)
