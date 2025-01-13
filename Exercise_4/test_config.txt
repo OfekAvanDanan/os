@@ -1,0 +1,61 @@
+PRODUCER 1
+2
+queue size = 2
+PRODUCER 2
+1
+queue size = 1
+PRODUCER 3
+1
+queue size = 2
+PRODUCER 4
+1
+queue size = 2
+PRODUCER 5
+2
+queue size = 1
+PRODUCER 6
+2
+queue size = 2
+PRODUCER 7
+2
+queue size = 2
+PRODUCER 8
+2
+queue size = 2
+PRODUCER 9
+2
+queue size = 1
+PRODUCER 10
+2
+queue size = 1
+PRODUCER 11
+2
+queue size = 1
+PRODUCER 12
+1
+queue size = 2
+PRODUCER 13
+2
+queue size = 2
+PRODUCER 14
+1
+queue size = 2
+PRODUCER 15
+2
+queue size = 2
+PRODUCER 16
+2
+queue size = 1
+PRODUCER 17
+1
+queue size = 2
+PRODUCER 18
+1
+queue size = 1
+PRODUCER 19
+1
+queue size = 2
+PRODUCER 20
+2
+queue size = 2
+Co-Editor queue size = 2

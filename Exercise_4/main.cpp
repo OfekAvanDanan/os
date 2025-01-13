@@ -1,6 +1,7 @@
 #include "CoEditor.h"
 #include "Config.h"
 #include "ConfigParser.h"
+#include "Dispatcher.h"
 #include "Producer.h"
 #include "ScreenManager.h"
 #include <iostream>
@@ -40,6 +41,12 @@ int main(int argc, char *argv[]) {
   BoundedQueue<std::string> newsQueue(config.coEditorQueueSize);
   BoundedQueue<std::string> weatherQueue(config.coEditorQueueSize);
 
+  // Create Dispatcher
+  Dispatcher dispatcher(&sportsQueue, &newsQueue, &weatherQueue, &producers, producers.size());
+
+  // Start Dispatcher thread
+  std::thread dispatcherThread(&Dispatcher::dispatchMessages, &dispatcher);
+
   // Create CoEditors for each type
   BoundedQueue<std::string> sharedQueue(config.coEditorQueueSize); // Shared queue for ScreenManager
   CoEditor sportsEditor("SPORTS", &sportsQueue, &sharedQueue);
@@ -62,10 +69,10 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // Send "DONE" messages to CoEditor queues
-  sportsQueue.insert("DONE");
-  newsQueue.insert("DONE");
-  weatherQueue.insert("DONE");
+  // Wait for Dispatcher to finish
+  if (dispatcherThread.joinable()) {
+    dispatcherThread.join();
+  }
 
   // Wait for CoEditor threads to finish
   if (sportsThread.joinable())
@@ -84,6 +91,5 @@ int main(int argc, char *argv[]) {
     delete producer;
   }
 
-  std::cout << "All producers, CoEditors, and ScreenManager have finished." << std::endl;
   return 0;
 }

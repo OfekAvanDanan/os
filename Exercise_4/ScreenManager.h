@@ -24,9 +24,9 @@ public:
       if (message == "DONE") {
         ++doneCount;
       } else {
-        std::cout << "ScreenManager displays: " << message << std::endl;
+        std::cout << message << std::endl;
       }
     }
-    std::cout << "ScreenManager: All messages processed. Exiting." << std::endl;
+    std::cout << "DONE" << std::endl;
   }
 };

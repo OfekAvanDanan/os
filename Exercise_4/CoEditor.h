@@ -32,7 +32,7 @@ public:
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       // Insert edited message into the shared queue
-      sharedQueue->insert("Edited: " + message);
+      sharedQueue->insert(message);
     }
   }
 };
