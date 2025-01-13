@@ -6,7 +6,7 @@ CXXFLAGS = -std=c++20 -Wall -Wextra -pthread
 TARGET = ex4.out
 
 # Source files
-SRCS = main.cpp ConfigParser.cpp
+SRCS = main.cpp ConfigParser.cpp Dispatcher.cpp
 
 # Header files
 HEADERS = Config.h ConfigParser.h Producer.h BoundedQueue.h Dispatcher.h CoEditor.h ScreenManager.h
