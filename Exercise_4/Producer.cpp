@@ -14,7 +14,7 @@ Producer::~Producer() {
 
 // Simulates production of items and inserts them into the queue
 void Producer::produceItems() {
-  int pCounter = 0;
+  // int pCounter = 0;
 
   // Create a random number generator
   std::random_device rd;
@@ -42,7 +42,7 @@ void Producer::produceItems() {
     }
 
     std::string output = "Producer " + std::to_string(id) + " " + item + " " + std::to_string(counter);
-    // + "producer Counter" + std::to_string(pCounter++);
+    // + " producer Counter" + std::to_string(pCounter++);
 
     queue->insert(output); // Insert the item into the queue
   }

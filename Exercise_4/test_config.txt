@@ -1,61 +1,61 @@
 PRODUCER 1
-1
+2
 queue size = 1
 PRODUCER 2
-2
-queue size = 1
+1
+queue size = 2
 PRODUCER 3
 1
-queue size = 1
+queue size = 2
 PRODUCER 4
-2
-queue size = 2
-PRODUCER 5
 1
-queue size = 2
+queue size = 1
+PRODUCER 5
+2
+queue size = 1
 PRODUCER 6
 2
-queue size = 2
+queue size = 1
 PRODUCER 7
-2
+1
 queue size = 2
 PRODUCER 8
 2
-queue size = 2
+queue size = 1
 PRODUCER 9
 1
-queue size = 1
+queue size = 2
 PRODUCER 10
 1
 queue size = 2
 PRODUCER 11
 1
-queue size = 2
+queue size = 1
 PRODUCER 12
 2
 queue size = 1
 PRODUCER 13
 1
-queue size = 1
+queue size = 2
 PRODUCER 14
-2
-queue size = 1
-PRODUCER 15
 1
 queue size = 2
+PRODUCER 15
+1
+queue size = 1
 PRODUCER 16
 1
 queue size = 2
 PRODUCER 17
-1
+2
 queue size = 2
 PRODUCER 18
-2
+1
 queue size = 1
 PRODUCER 19
-1
+2
 queue size = 2
 PRODUCER 20
-2
+1
 queue size = 1
 Co-Editor queue size = 2
