@@ -1,13 +1,82 @@
 PRODUCER 1
-20
-queue size = 5
+200
+queue size = 2
 
 PRODUCER 2
-20
-queue size = 20
+200
+queue size = 5
 
 PRODUCER 3
-20
+200
+queue size = 10
+
+PRODUCER 4
+200
 queue size = 20
 
-Co-Editor queue size = 17
+PRODUCER 5
+200
+queue size = 20
+
+PRODUCER 6
+200
+queue size = 20
+
+PRODUCER 7
+200
+queue size = 20
+
+PRODUCER 8
+200
+queue size = 20
+
+PRODUCER 9
+200
+queue size = 20
+
+PRODUCER 10
+200
+queue size = 20
+
+PRODUCER 11
+200
+queue size = 2
+
+PRODUCER 12
+200
+queue size = 5
+
+PRODUCER 13
+200
+queue size = 10
+
+PRODUCER 14
+200
+queue size = 20
+
+PRODUCER 15
+200
+queue size = 20
+
+PRODUCER 16
+200
+queue size = 20
+
+PRODUCER 17
+200
+queue size = 20
+
+PRODUCER 18
+200
+queue size = 20
+
+PRODUCER 19
+200
+queue size = 20
+
+PRODUCER 20
+200
+queue size = 20
+
+
+Co-Editor queue size = 2

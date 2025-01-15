@@ -1,33 +1,30 @@
-Producer 1 NEWS 0
-Producer 3 WETHER 0
-Producer 5 SPORT 0
-Producer 2 NEWS 0
-Producer 4 WETHER 0
-Producer 8 SPORT 0
-Producer 6 NEWS 0
-Producer 12 WETHER 0
-Producer 9 SPORT 0
-Producer 13 WETHER 0
-Producer 7 NEWS 0
-Producer 10 SPORT 0
-Producer 16 WETHER 0
-Producer 11 NEWS 0
-Producer 14 NEWS 0
-Producer 17 WETHER 0
-Producer 20 SPORT 0
-Producer 15 NEWS 0
-Producer 19 WETHER 0
-Producer 1 SPORT 0
-Producer 18 NEWS 0
-Producer 5 WETHER 0
-Producer 6 SPORT 0
-Producer 8 WETHER 0
-Producer 7 SPORT 0
-Producer 11 WETHER 0
-Producer 9 SPORT 1
-Producer 13 WETHER 1
-Producer 10 SPORT 1
-Producer 15 SPORT 0
-Producer 16 SPORT 0
-Producer 20 SPORT 1
+Producer 1 SPORT 0producer Counter0
+Producer 4 NEWS 0producer Counter0
+Producer 3 WETHER 0producer Counter0
+Producer 5 NEWS 0producer Counter0
+Producer 2 SPORT 0producer Counter0
+Producer 8 NEWS 0producer Counter0
+Producer 6 SPORT 0producer Counter0
+Producer 10 WETHER 0producer Counter0
+Producer 7 SPORT 0producer Counter0
+Producer 11 NEWS 0producer Counter0
+Producer 12 WETHER 0producer Counter0
+Producer 15 NEWS 0producer Counter0
+Producer 9 SPORT 0producer Counter0
+Producer 14 WETHER 0producer Counter0
+Producer 13 SPORT 0producer Counter0
+Producer 17 WETHER 0producer Counter0
+Producer 2 NEWS 0producer Counter1
+Producer 16 SPORT 0producer Counter0
+Producer 18 WETHER 0producer Counter0
+Producer 4 NEWS 1producer Counter1
+Producer 19 WETHER 0producer Counter0
+Producer 20 SPORT 0producer Counter0
+Producer 6 NEWS 0producer Counter1
+Producer 7 WETHER 0producer Counter1
+Producer 8 NEWS 1producer Counter1
+Producer 12 WETHER 1producer Counter1
+Producer 18 NEWS 0producer Counter1
+Producer 14 WETHER 1producer Counter1
+Producer 20 WETHER 0producer Counter1
 DONE

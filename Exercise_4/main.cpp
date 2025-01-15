@@ -1,3 +1,5 @@
+// Azriel Erenkrantz - 315336719 | Ofek Avan Danan - 211824727
+
 #include "CoEditor.h"
 #include "Config.h"
 #include "ConfigParser.h"
