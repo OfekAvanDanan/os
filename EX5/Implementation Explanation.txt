@@ -1,0 +1,19 @@
+first, I implemented a new system call named memsize in the xv6 operating system.
+ The purpose of this system call is to retrieve the current memory usage of a process.
+ Additionally, I wrote a test program, memsize_test.c, to validate the functionality of the system call.
+
+steps:
+syscall.c: Connect the system call to the system call table
+syscall.h: Define a unique ID for the system call
+user.h: Add a prototype for the system call in the user interface
+usys.pl: Create a user-facing function for the system call
+Makefile: Add the test file memsize_test.c to the build
+
+After that, I tested the new syscall with memsize_test.c file
+
+part 2 -bonus:
+Implementing a Hello World Program:
+Create a file helloworld.c with code to print the string
+Add the file to the Makefile for compilation
+
+
