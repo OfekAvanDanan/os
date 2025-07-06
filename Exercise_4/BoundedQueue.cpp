@@ -1,3 +1,5 @@
+// Azriel Erenkrantz - 315336719 | Ofek Avan Danan - 211824727
+
 #include "BoundedQueue.h"
 
 // Constructor: Initializes the queue with a fixed size

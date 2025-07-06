@@ -1,3 +1,5 @@
+// Azriel Erenkrantz - 315336719 | Ofek Avan Danan - 211824727
+
 #ifndef PRODUCER_H
 #define PRODUCER_H
 
@@ -18,51 +20,16 @@ private:
 
 public:
   // Constructor: Initializes the producer with ID, number of items, and queue size
-  Producer(int id, int numItems, int queueSize) : id(id), numItems(numItems) {
-    queue = new BoundedQueue<std::string>(queueSize); // Dynamically allocate a new queue
-  }
+  Producer(int id, int numItems, int queueSize);
 
   // Destructor: Cleans up the dynamically allocated queue
-  ~Producer() {
-    delete queue; // Free the allocated memory for the queue
-  }
+  ~Producer();
 
   // Simulates production of items and inserts them into the queue
-  void produceItems() {
-    // Create a random number generator
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, 2);
-
-    // GIVE
-    for (int i = 0; i < numItems; ++i) {
-      int itemNum = dist(gen);
-
-      std::string item;
-      int counter = 0;
-      switch (itemNum) {
-      case 0:
-        item = "SPORT";
-        counter = SportCounter++;
-        break;
-      case 1:
-        item = "NEWS";
-        counter = NewsCounter++;
-        break;
-      default:
-        item = "WETHER";
-        counter = WetherCounter++;
-        break;
-      }
-
-      std::string output = "Producer " + std::to_string(id) + " " + item + " " + std::to_string(counter);
-      queue->insert(output); // Insert the item into the queue
-    }
-    queue->insert("DONE"); // Signal the end of production
-  }
+  void produceItems();
 
   // Accessor for the queue
-  BoundedQueue<std::string> *getQueue() const { return queue; }
+  BoundedQueue<std::string> *getQueue() const;
 };
 
 #endif // PRODUCER_H
